@@ -38,7 +38,7 @@ namespace DesafioAPI.Controllers
                     try
                     {
                         TaxaModel taxa = adquirente.GetTaxa(request.Bandeira);
-                        result.ValorLiquido = taxa.CalcularValorTotal(request.Valor, request.Tipo);
+                        result.ValorLiquido = taxa.CalcularValorTotal(request.Valor.Value, request.Tipo);
                         return new ActionResult<object>(result);
                     }
                     catch (Exception ex)

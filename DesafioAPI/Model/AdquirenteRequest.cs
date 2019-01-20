@@ -9,7 +9,7 @@ namespace DesafioAPI.Model
     public class AdquirenteRequest
     {
         [JsonProperty("Valor")]
-        public double Valor { get; set; }
+        public double? Valor { get; set; }
         [JsonProperty("Adquirente")]
         public string Adquirente { get; set; }
         [JsonProperty("Bandeira")]
@@ -20,17 +20,12 @@ namespace DesafioAPI.Model
         public List<string> ValidarEntrada()
         {
             List<string> listaCriticas = new List<string>();
-            if (string.IsNullOrEmpty(Valor.ToString()))
+            if (!Valor.HasValue)
             {
                 listaCriticas.Add("Valor não informado");
-            }
-            else
+            } else if (Valor.Value == 0)
             {
-                double valorDecimal;
-                if (!double.TryParse(Valor.ToString(), out valorDecimal))
-                {
-                    listaCriticas.Add("Valor não possui um número válido");
-                }
+                listaCriticas.Add("Valor não pode ser zero");
             }
 
             if (string.IsNullOrEmpty(Adquirente))
