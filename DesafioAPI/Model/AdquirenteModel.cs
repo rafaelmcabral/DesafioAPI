@@ -17,7 +17,7 @@ namespace DesafioAPI.Model
 
         public TaxaModel GetTaxa(string bandeira)
         {
-            TaxaModel taxa = this.Taxas.Where((x => x.Bandeira == bandeira)).SingleOrDefault();
+            TaxaModel taxa = this.Taxas.Where((x => x.Bandeira.ToLower() == bandeira.ToLower())).SingleOrDefault();
             if (taxa != null)
             {
                 return taxa;

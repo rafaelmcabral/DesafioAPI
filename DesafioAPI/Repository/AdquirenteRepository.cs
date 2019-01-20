@@ -78,7 +78,7 @@ namespace DesafioAPI.Repository
 
         public AdquirenteModel Get(string codigo)
         {
-            return listaAdquirente.Where((x => x.Codigo == codigo)).SingleOrDefault();
+            return listaAdquirente.Where((x => x.Codigo.ToLower() == codigo.ToLower())).SingleOrDefault();
         }
 
         public IEnumerable<AdquirenteModel> GetAll()

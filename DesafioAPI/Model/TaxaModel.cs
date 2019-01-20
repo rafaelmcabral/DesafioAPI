@@ -19,11 +19,11 @@ namespace DesafioAPI.Model
         {
             if (valor != 0)
             {
-                switch (tipo)
+                switch (tipo.ToLower())
                 {
-                    case "Credito":
+                    case "credito":
                         return valor - (valor * this.Credito / 100);
-                    case "Debito":
+                    case "debito":
                         return valor - (valor * this.Debito / 100);
                     default:
                         throw new Exception("Tipo não suportado");
