@@ -14,13 +14,14 @@ namespace DesafioAPI.Controllers
     [ApiController]
     public class AdquirenteController : ControllerBase
     {
-        private readonly IAdquirenteRepository repository = new AdquirenteRepository();
+        private readonly static IAdquirenteRepository AdquirenteRepository = new AdquirenteRepository();
+        private readonly static ITaxaRepository TaxaRepository = new TaxaRepository();
 
         [Route("/mdr")]
         [HttpGet]
         public ActionResult <IEnumerable<AdquirenteModel>> Get()
         {
-            return new ActionResult<IEnumerable<AdquirenteModel>>(repository.GetAll());
+            return new ActionResult<IEnumerable<AdquirenteModel>>(AdquirenteRepository.GetAll());
         }
 
         [Route("/transaction")]
@@ -31,22 +32,32 @@ namespace DesafioAPI.Controllers
 
             if (listaCriticas.Count == 0)
             {
-                AdquirenteModel adquirente = repository.Get(request.Adquirente);
+                AdquirenteModel adquirente = AdquirenteRepository.Get(request.Adquirente);
                 if (adquirente != null)
                 {
-                    AdquirenteResult result = new AdquirenteResult();
-                    try
+                    TaxaModel taxa = TaxaRepository.Get(adquirente, request.Bandeira);
+                    if (taxa != null)
                     {
-                        TaxaModel taxa = adquirente.GetTaxa(request.Bandeira);
-                        result.ValorLiquido = taxa.CalcularValorTotal(request.Valor.Value, request.Tipo);
-                        return new ActionResult<object>(result);
-                    }
-                    catch (Exception ex)
+                        try
+                        {
+                            AdquirenteResult result = new AdquirenteResult();
+                            result.ValorLiquido = taxa.CalcularValorTotal(request.Valor.Value, request.Tipo);
+                            return new ActionResult<object>(result);
+                        }
+                        catch (Exception ex)
+                        {
+                            return new ActionResult<object>(new
+                            {
+                                error = "400",
+                                message = "Não foi possível realizar a operação: " + ex.Message
+                            });
+                        }
+                    } else
                     {
                         return new ActionResult<object>(new
                         {
                             error = "400",
-                            message = "Não foi possível retornar o valor total da operação: " + ex.Message
+                            message = "Bandeira não encontrada"
                         });
                     }
                 }

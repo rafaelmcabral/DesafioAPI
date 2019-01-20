@@ -14,17 +14,5 @@ namespace DesafioAPI.Model
         public string Adquirente { get; set; }
         [JsonProperty("Taxas")]
         public TaxaModel[] Taxas { get; set; }
-
-        public TaxaModel GetTaxa(string bandeira)
-        {
-            TaxaModel taxa = this.Taxas.Where((x => x.Bandeira.ToLower() == bandeira.ToLower())).SingleOrDefault();
-            if (taxa != null)
-            {
-                return taxa;
-            } else
-            {
-                throw new Exception("Bandeira não localizada");
-            }
-        }
     }
 }
